@@ -34,16 +34,16 @@ export async function GET(
 
     if (!verses || verses.length === 0) {
       return NextResponse.json(
-        { error: `No verses found for ${book} chapter ${chapter}` },
+        { verses: [], error: `No verses found for ${book} chapter ${chapter}` },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(verses);
+    return NextResponse.json({ verses: verses });
   } catch (error) {
     console.error('Error fetching verses:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch verses' },
+      { verses: [], error: 'Failed to fetch verses' },
       { status: 500 }
     );
   }

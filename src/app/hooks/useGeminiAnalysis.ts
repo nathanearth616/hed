@@ -11,19 +11,17 @@ export function useGeminiAnalysis() {
   const RATE_LIMIT_INTERVAL = 60000; // 1 minute in milliseconds
 
   const analyzeVerse = async (verse: BibleVerse, model: AIModel) => {
-    // Check if enough time has passed since the last request
+    setIsLoading(true);
+    setError(null);
+    setAnalysis(null);
+
     const now = Date.now();
-    const timeSinceLastRequest = now - lastRequestTime;
-    
-    if (timeSinceLastRequest < RATE_LIMIT_INTERVAL) {
-      const waitTime = Math.ceil((RATE_LIMIT_INTERVAL - timeSinceLastRequest) / 1000);
-      setError(`Rate limit reached. Please wait ${waitTime} seconds before trying again.`);
+    if (lastRequestTime && now - lastRequestTime < 60000) {
+      setError('Rate limit reached. Please try again in a minute.');
+      setIsLoading(false);
       return;
     }
 
-    setIsLoading(true);
-    setError(null);
-    
     try {
       const response = await fetch('/api/verses/analyze', {
         method: 'POST',
@@ -34,31 +32,50 @@ export function useGeminiAnalysis() {
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
         if (response.status === 429) {
           throw new Error('Rate limit reached. Please try again in a minute.');
         }
-        throw new Error(errorData.error || 'Failed to analyze verse');
+        const errorText = await response.text();
+        try {
+          const errorData = JSON.parse(errorText);
+          throw new Error(errorData.error || 'Failed to analyze verse');
+        } catch {
+          throw new Error(`Failed to analyze verse: ${response.statusText}`);
+        }
       }
       
+      // First try to get the response as text
       const text = await response.text();
       
+      // If the text is empty, throw an error
+      if (!text.trim()) {
+        throw new Error('Empty response from server');
+      }
+
       try {
+        // Try to parse the entire response as JSON first
         const data = JSON.parse(text);
         setAnalysis(data);
         setLastRequestTime(now);
       } catch (parseError) {
+        // If that fails, try to find a JSON object in the response
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
-          const cleanedJson = jsonMatch[0]
-            .replace(/^[^{]*/, '')
-            .replace(/[^}]*$/, '');
-          
-          const data = JSON.parse(cleanedJson);
-          setAnalysis(data);
-          setLastRequestTime(now);
+          try {
+            const cleanedJson = jsonMatch[0]
+              .replace(/^[^{]*/, '')  // Remove anything before the first {
+              .replace(/[^}]*$/, ''); // Remove anything after the last }
+            
+            const data = JSON.parse(cleanedJson);
+            setAnalysis(data);
+            setLastRequestTime(now);
+          } catch (secondaryParseError) {
+            console.error('Failed to parse cleaned JSON:', secondaryParseError);
+            throw new Error('Failed to parse analysis response');
+          }
         } else {
-          throw new Error('Failed to parse analysis response');
+          console.error('No valid JSON found in response:', text);
+          throw new Error('Invalid response format from server');
         }
       }
     } catch (err) {

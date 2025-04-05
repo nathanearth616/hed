@@ -93,19 +93,17 @@ export function parseVerseReference(referenceString: string): VerseReference | n
 export async function getChapterVerses(book: string, chapter: number): Promise<BibleVerse[]> {
   try {
     const response = await fetch(`/api/verses/${encodeURIComponent(book)}/${chapter}`);
+    const data = await response.json();
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Failed to fetch verses: ${errorData.error || response.statusText}`);
+      throw new Error(data.error || 'Failed to fetch verses');
     }
 
-    const verses = await response.json();
-    
-    if (!Array.isArray(verses)) {
+    if (!data.verses || !Array.isArray(data.verses)) {
       throw new Error('Invalid response format: expected an array of verses');
     }
 
-    return verses.map((verse: any) => ({
+    return data.verses.map((verse: any) => ({
       id: verse.id || 0,
       book,
       chapter,
