@@ -56,98 +56,122 @@ export default function BibleSearch() {
     []
   );
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchText.trim()) return;
     debouncedSearch(searchText);
   };
 
-  const handleVerseSelect = (verse: BibleVerse) => {
-    setSelectedVerse(verse);
+  const handleVerseSelect = (verse: any) => {
+    setSelectedVerse({
+      ...verse,
+      testament: verse.book && (
+        ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy'].includes(verse.book) 
+        ? 'Old' 
+        : 'New'
+      )
+    });
   };
 
   return (
-    <div className="space-y-12">
-      <form onSubmit={handleSearch} className="max-w-3xl mx-auto">
-        <div className="flex gap-3">
+    <div className="space-y-8">
+      <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
+        <div className="flex gap-4 p-2 bg-white/30 dark:bg-black/20 rounded-2xl shadow-sm backdrop-blur-sm">
           <input
             type="text"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Enter a topic or theme to explore..."
-            className="flex-1 p-4 rounded-xl border bg-white dark:bg-black/30 shadow-sm focus:ring-2 focus:ring-foreground/20 focus:outline-none transition-all"
+            placeholder="Search for biblical topics or themes..."
+            className="flex-1 px-6 py-4 rounded-xl border-0 bg-transparent focus:ring-2 focus:ring-blue-500 text-lg placeholder:text-foreground/50"
           />
           <button
             type="submit"
             disabled={isLoading || !searchText.trim()}
-            className="px-8 py-4 bg-foreground text-background rounded-xl hover:opacity-90 disabled:opacity-50 transition-all flex items-center gap-2 shadow-sm"
+            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl font-medium transition-all flex items-center gap-3 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
           >
             {isLoading ? (
               <>
-                <LoadingSpinner />
-                <span>Searching</span>
+                <LoadingSpinner className="w-5 h-5" />
+                <span>Searching...</span>
               </>
             ) : (
-              'Search'
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <span>Search</span>
+              </>
             )}
           </button>
         </div>
       </form>
 
       {error && (
-        <div className="max-w-3xl mx-auto p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl">
-          {error}
-        </div>
-      )}
-
-      {isLoading && !error && (
-        <div className="max-w-3xl mx-auto mt-12 text-center">
-          <div className="flex flex-col items-center gap-4">
-            <LoadingSpinner />
-            <p className="text-lg text-foreground/70">Searching the scriptures...</p>
+        <div className="max-w-3xl mx-auto p-6 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 flex items-start gap-4">
+          <svg className="w-6 h-6 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <h3 className="font-semibold mb-1">Error</h3>
+            <p>{error}</p>
           </div>
         </div>
       )}
 
-      {searchResult && !isLoading && (
-        <div className="space-y-12">
-          <section className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-semibold mb-6">Analysis</h2>
-            <p className="text-lg leading-relaxed text-foreground/80">{searchResult.analysis}</p>
-          </section>
-
-          <section className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-semibold mb-6">Main Themes</h2>
-            <div className="flex flex-wrap gap-3">
-              {searchResult.mainThemes.map((theme, i) => (
-                <span key={i} className="px-4 py-2 bg-foreground/5 dark:bg-foreground/10 rounded-full text-foreground/80 hover:bg-foreground/10 dark:hover:bg-foreground/15 transition-colors">
-                  {theme}
-                </span>
-              ))}
+      {searchResult && (
+        <div className="mt-16">
+          <section className="space-y-8">
+            <div className="flex items-center justify-between border-b pb-6">
+              <h2 className="text-3xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600">
+                Verse Relationships
+              </h2>
+              <span className="px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-sm font-medium">
+                Found {searchResult.verseReferences.length} verses
+              </span>
             </div>
-          </section>
 
-          <section className="space-y-6">
-            <h2 className="text-3xl font-semibold mb-6">Verse Relationships</h2>
-            <div className="w-full h-[600px] border rounded-xl bg-white dark:bg-black/30 shadow-sm overflow-hidden">
-              <VerseGraph 
-                searchResult={searchResult} 
-                onVerseSelect={handleVerseSelect}
-              />
+            <div className="grid grid-cols-1 lg:grid-cols-[1.5fr,1fr] gap-8">
+              <div className="h-[600px] border rounded-2xl bg-white/50 dark:bg-black/20 shadow-sm overflow-hidden backdrop-blur-sm">
+                <VerseGraph 
+                  searchResult={searchResult} 
+                  onVerseSelect={handleVerseSelect}
+                />
+              </div>
+
+              <div className="space-y-4 overflow-auto max-h-[600px] pr-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+                {searchResult.verseReferences.map((verse, i) => (
+                  <div 
+                    key={i} 
+                    className="p-6 border rounded-xl bg-white/50 dark:bg-black/20 shadow-sm hover:shadow-md transition-all cursor-pointer hover:bg-white/70 dark:hover:bg-black/30 backdrop-blur-sm"
+                    onClick={() => handleVerseSelect({
+                      id: 0,
+                      book: verse.reference.split(' ')[0],
+                      chapter: parseInt(verse.reference.split(' ')[1].split(':')[0]),
+                      verse: parseInt(verse.reference.split(':')[1]),
+                      text: verse.text,
+                      testament: verse.reference.split(' ')[0].includes('Genesis') ? 'Old' : 'New'
+                    })}
+                  >
+                    <h3 className="text-lg font-semibold mb-3 text-blue-600 dark:text-blue-400">
+                      {verse.reference}
+                    </h3>
+                    <p className="mb-3 italic text-foreground/70">{verse.text}</p>
+                    <p className="mb-3 text-foreground/80 text-sm">{verse.summary}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400">
+                        Relevance: {verse.relevance}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+
             {selectedVerse && (
-              <VerseDetails verse={selectedVerse} />
+              <div className="mt-12">
+                <VerseDetails verse={selectedVerse} />
+              </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-              {searchResult.verseReferences.map((verse, i) => (
-                <div key={i} className="p-6 border rounded-xl bg-white dark:bg-black/30 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="text-lg font-semibold mb-3">{verse.reference}</h3>
-                  <p className="mb-3 italic text-foreground/70">{verse.text}</p>
-                  <p className="mb-3 text-foreground/80">{verse.summary}</p>
-                  <p className="text-sm text-foreground/60 italic">Relevance: {verse.relevance}</p>
-                </div>
-              ))}
-            </div>
           </section>
         </div>
       )}

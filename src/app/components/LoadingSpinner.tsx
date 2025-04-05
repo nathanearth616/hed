@@ -1,7 +1,5 @@
-export default function LoadingSpinner() {
+export default function LoadingSpinner({ className = "w-5 h-5" }: { className?: string }) {
   return (
-    <div className="flex items-center justify-center">
-      <div className="animate-spin rounded-full h-5 w-5 border-2 border-foreground/20 border-t-foreground"></div>
-    </div>
+    <div className={`${className} animate-spin rounded-full border-2 border-white/30 border-r-white`} />
   );
 } 
