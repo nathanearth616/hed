@@ -1,0 +1,36 @@
+{
+  "name": "hed",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "import-bible": "ts-node -r dotenv/config scripts/import-bible-data.ts",
+    "import-relationships": "ts-node -r dotenv/config scripts/import-verse-relationships.ts",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "lodash": "^4.17.21",
+    "next": "15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-force-graph-2d": "^1.27.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^20.17.28",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^16.4.7",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.4",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
