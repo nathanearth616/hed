@@ -87,8 +87,8 @@ export default function BibleSearch({ selectedModel }: { selectedModel: AIModel 
   };
 
   const handleVerseSelect = (verse: BibleVerse) => {
-    // Navigate to the verse page with query parameters
-    window.open(`/bible/${verse.book}/${verse.chapter}?highlight=${verse.verse}`, '_blank');
+    // Include the selected model in the URL
+    window.open(`/bible/${verse.book}/${verse.chapter}?highlight=${verse.verse}&model=${selectedModel}`, '_blank');
   };
 
   return (
@@ -135,11 +135,11 @@ export default function BibleSearch({ selectedModel }: { selectedModel: AIModel 
         </div>
       )}
 
-      {/* Search Results and Analysis */}
+      {/* Search Results - Modified to use full width */}
       {searchResult && (
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-12rem)]">
-            {/* Left Column - Search Results */}
+          <div className="h-[calc(100vh-12rem)]">
+            {/* Search Results */}
             <div className="flex flex-col min-h-0">
               <div className="flex items-center justify-between text-white mb-4">
                 <h2 className="font-medium">Search Results</h2>
@@ -180,248 +180,6 @@ export default function BibleSearch({ selectedModel }: { selectedModel: AIModel 
                     <p className="text-gray-500 dark:text-gray-400 text-sm">{verse.summary}</p>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            {/* Right Column - Analysis */}
-            <div className="flex flex-col min-h-0">
-              <div className="overflow-y-auto pr-4 hide-scrollbar flex-1">
-                <div className="space-y-6">
-                  {analysisLoading ? (
-                    <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                      border border-white/20 backdrop-blur-md">
-                      <div className="flex items-center justify-center space-x-2">
-                        <LoadingSpinner />
-                        <span className="text-gray-500 dark:text-gray-400">Analyzing verse...</span>
-                      </div>
-                    </div>
-                  ) : analysis && selectedVerse ? (
-                    <div className="space-y-6">
-                      {/* Key Themes */}
-                      <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                        border border-white/20 backdrop-blur-md shadow-sm">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Key Themes</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {analysis.themes.map((theme, i) => (
-                            <span 
-                              key={i}
-                              className="px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-500/10 
-                                text-green-600 dark:text-green-400 text-sm font-medium"
-                            >
-                              {theme}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Related Verses */}
-                      <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                        border border-white/20 backdrop-blur-md shadow-sm">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Related Verses</h3>
-                        <div className="space-y-2">
-                          {analysis.relatedVerses.map((verse, i) => (
-                            <div key={i} className="text-gray-700 dark:text-gray-300">
-                              {verse}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Theological Significance */}
-                      <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                        border border-white/20 backdrop-blur-md shadow-sm">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Theological Significance</h3>
-                        <p className="text-gray-700 dark:text-gray-300">
-                          {analysis.significance}
-                        </p>
-                      </div>
-
-                      {/* Historical Context */}
-                      <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                        border border-white/20 backdrop-blur-md shadow-sm">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Historical Context</h3>
-                        <p className="text-gray-700 dark:text-gray-300">
-                          {analysis.context}
-                        </p>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {/* Topic Analysis */}
-                  <div className="space-y-6">
-                    {/* Main Themes */}
-                    <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                      border border-white/20 backdrop-blur-md shadow-sm">
-                      <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                        </svg>
-                        Key Themes
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
-                        {searchResult.mainThemes.map((theme, i) => (
-                          <span 
-                            key={i}
-                            className="px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-500/10 
-                              text-green-600 dark:text-green-400 text-sm font-medium
-                              border border-green-100 dark:border-green-500/20"
-                          >
-                            {theme}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Comprehensive Analysis */}
-                    <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                      border border-white/20 backdrop-blur-md shadow-sm">
-                      <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Comprehensive Analysis
-                      </h3>
-                      <div className="prose prose-sm dark:prose-invert max-w-none">
-                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                          {searchResult.analysis}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Theological Framework */}
-                    {searchResult.theologicalFramework && (
-                      <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                        border border-white/20 backdrop-blur-md shadow-sm">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                          </svg>
-                          Theological Framework
-                        </h3>
-                        <div className="space-y-4">
-                          <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-500/10 border border-purple-100 dark:border-purple-500/20">
-                            <h4 className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">Old Testament</h4>
-                            <p className="text-gray-700 dark:text-gray-300 text-sm">
-                              {searchResult.theologicalFramework.oldTestament}
-                            </p>
-                          </div>
-                          <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-500/10 border border-purple-100 dark:border-purple-500/20">
-                            <h4 className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">New Testament</h4>
-                            <p className="text-gray-700 dark:text-gray-300 text-sm">
-                              {searchResult.theologicalFramework.newTestament}
-                            </p>
-                          </div>
-                          <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-500/10 border border-purple-100 dark:border-purple-500/20">
-                            <h4 className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">Development</h4>
-                            <p className="text-gray-700 dark:text-gray-300 text-sm">
-                              {searchResult.theologicalFramework.development}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Contemporary Application */}
-                    {searchResult.contemporaryApplication && (
-                      <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                        border border-white/20 backdrop-blur-md shadow-sm">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                          </svg>
-                          Contemporary Application
-                        </h3>
-                        <div className="space-y-4">
-                          <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20">
-                            <h4 className="text-sm font-medium text-amber-700 dark:text-amber-300 mb-2">Personal</h4>
-                            <p className="text-gray-700 dark:text-gray-300 text-sm">
-                              {searchResult.contemporaryApplication.personal}
-                            </p>
-                          </div>
-                          <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20">
-                            <h4 className="text-sm font-medium text-amber-700 dark:text-amber-300 mb-2">Community</h4>
-                            <p className="text-gray-700 dark:text-gray-300 text-sm">
-                              {searchResult.contemporaryApplication.community}
-                            </p>
-                          </div>
-                          <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20">
-                            <h4 className="text-sm font-medium text-amber-700 dark:text-amber-300 mb-2">Society</h4>
-                            <p className="text-gray-700 dark:text-gray-300 text-sm">
-                              {searchResult.contemporaryApplication.society}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Common Misconceptions */}
-                    {searchResult.commonMisconceptions && searchResult.commonMisconceptions.length > 0 && (
-                      <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                        border border-white/20 backdrop-blur-md shadow-sm">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                          </svg>
-                          Common Misconceptions
-                        </h3>
-                        <div className="space-y-4">
-                          {searchResult.commonMisconceptions.map((item, i) => (
-                            <div key={i} className="p-4 rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20">
-                              <div className="font-medium text-red-600 dark:text-red-400 mb-1">
-                                Misconception: {item.misconception}
-                              </div>
-                              <p className="text-gray-700 dark:text-gray-300 text-sm">
-                                <span className="font-medium">Correction: </span>
-                                {item.correction}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Further Study */}
-                    {searchResult.furtherStudy && (
-                      <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
-                        border border-white/20 backdrop-blur-md shadow-sm">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                          </svg>
-                          Further Study
-                        </h3>
-                        <div className="space-y-4">
-                          <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
-                            <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">Key Passages</h4>
-                            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 text-sm space-y-1">
-                              {searchResult.furtherStudy.keyPassages.map((passage, i) => (
-                                <li key={i} className="hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">
-                                  {passage}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
-                            <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">Suggested Topics</h4>
-                            <div className="flex flex-wrap gap-2">
-                              {searchResult.furtherStudy.suggestedTopics.map((topic, i) => (
-                                <span 
-                                  key={i}
-                                  className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 
-                                    text-blue-600 dark:text-blue-400 text-sm font-medium
-                                    border border-blue-100 dark:border-blue-500/20
-                                    hover:bg-blue-100 dark:hover:bg-blue-500/20 cursor-pointer"
-                                >
-                                  {topic}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
