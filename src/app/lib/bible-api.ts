@@ -96,23 +96,40 @@ export async function getChapterVerses(book: string, chapter: number): Promise<B
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Failed to fetch verses: ${errorData.message || response.statusText}`);
+      throw new Error(`Failed to fetch verses: ${errorData.error || response.statusText}`);
     }
 
-    const data = await response.json();
+    const verses = await response.json();
     
-    if (!Array.isArray(data)) {
+    if (!Array.isArray(verses)) {
       throw new Error('Invalid response format: expected an array of verses');
     }
 
-    return data.map((verse: any) => ({
+    return verses.map((verse: any) => ({
+      id: verse.id || 0,
       book,
       chapter,
       verse: verse.verse,
-      text: verse.text
+      text: verse.text,
+      testament: verse.testament || determineTestament(book)
     }));
   } catch (error) {
     console.error('Error fetching chapter verses:', error);
-    throw new Error(`Failed to load ${book} chapter ${chapter}. Please try again.`);
+    throw error;
   }
+}
+
+function determineTestament(book: string): 'old' | 'new' {
+  const oldTestamentBooks = [
+    'Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy',
+    'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel', '1 Kings',
+    '2 Kings', '1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah',
+    'Esther', 'Job', 'Psalms', 'Proverbs', 'Ecclesiastes',
+    'Song of Solomon', 'Isaiah', 'Jeremiah', 'Lamentations',
+    'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos', 'Obadiah',
+    'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai',
+    'Zechariah', 'Malachi'
+  ];
+
+  return oldTestamentBooks.includes(book) ? 'old' : 'new';
 } 
