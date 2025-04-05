@@ -135,11 +135,10 @@ export default function BibleSearch({ selectedModel }: { selectedModel: AIModel 
         </div>
       )}
 
-      {/* Search Results - Modified to use full width */}
+      {/* Search Results */}
       {searchResult && (
         <div className="max-w-7xl mx-auto">
-          <div className="h-[calc(100vh-12rem)]">
-            {/* Search Results */}
+          <div className="h-[calc(100vh-12rem)] overflow-y-auto">
             <div className="flex flex-col min-h-0">
               <div className="flex items-center justify-between text-white mb-4">
                 <h2 className="font-medium">Search Results</h2>
@@ -147,7 +146,7 @@ export default function BibleSearch({ selectedModel }: { selectedModel: AIModel 
                   {searchResult.verseReferences.length} verses found
                 </span>
               </div>
-              <div className="overflow-y-auto pr-4 hide-scrollbar space-y-4 flex-1">
+              <div className="overflow-y-auto pr-4 hide-scrollbar space-y-4">
                 {searchResult.verseReferences.map((verse, i) => (
                   <div 
                     key={i} 
