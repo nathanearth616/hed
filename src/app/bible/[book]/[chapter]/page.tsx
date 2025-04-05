@@ -111,7 +111,7 @@ export default function BibleChapterPage() {
         {/* Left Column - Bible Verses */}
         <div className="space-y-6 max-h-[calc(100vh-2rem)] overflow-y-auto">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white sticky top-0 
-            bg-white/95 dark:bg-black/95 py-4 z-10 backdrop-blur-sm">
+            py-4 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
             {book} {chapter}
           </h1>
           <div className="space-y-4">
@@ -140,8 +140,7 @@ export default function BibleChapterPage() {
           max-h-[calc(100vh-4rem)] overflow-y-auto">
           {selectedVerse && (
             <>
-              <div className="sticky top-0 bg-white/95 dark:bg-black/95 py-4 z-10 
-                backdrop-blur-sm">
+              <div className="sticky top-0 py-4 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                     Verse Analysis
