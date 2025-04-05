@@ -83,7 +83,7 @@ export default function BibleSearch() {
             placeholder="Enter a biblical topic, theme, or verse..."
             className="w-full px-6 py-4 rounded-2xl bg-white/95 dark:bg-black/70 
               border border-white/20 backdrop-blur-md
-              focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
+              focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500
               placeholder:text-gray-500 dark:placeholder:text-gray-400
               text-lg shadow-sm"
           />
@@ -91,8 +91,8 @@ export default function BibleSearch() {
             type="submit"
             disabled={isLoading || !searchText.trim()}
             className="absolute right-3 top-1/2 -translate-y-1/2 px-6 py-2 rounded-xl
-              bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700
-              disabled:opacity-50 disabled:hover:from-indigo-500 disabled:hover:to-purple-600
+              bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700
+              disabled:opacity-50 disabled:hover:from-green-500 disabled:hover:to-emerald-600
               text-white font-medium transition-all duration-200 shadow-sm"
           >
             {isLoading ? (
@@ -126,14 +126,14 @@ export default function BibleSearch() {
                   relative p-4 rounded-xl border-2 transition-all duration-200
                   flex flex-col items-center gap-3
                   ${selectedModel === model.id 
-                    ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10' 
-                    : 'border-gray-200 dark:border-gray-800 hover:border-indigo-500/50'
+                    ? 'border-green-500 bg-green-50 dark:bg-green-500/10' 
+                    : 'border-gray-200 dark:border-gray-800 hover:border-green-500/50'
                   }
                 `}
               >
                 {selectedModel === model.id && (
                   <div className="absolute top-2 right-2">
-                    <svg className="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -194,11 +194,11 @@ export default function BibleSearch() {
                       transition-all duration-200 group"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-medium text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-500">
+                      <h3 className="font-medium text-green-600 dark:text-green-400 group-hover:text-green-500">
                         {verse.reference}
                       </h3>
-                      <span className="px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 
-                        text-indigo-600 dark:text-indigo-400 text-xs font-medium">
+                      <span className="px-3 py-1 rounded-full bg-green-50 dark:bg-green-500/10 
+                        text-green-600 dark:text-green-400 text-xs font-medium">
                         Relevance: {verse.relevance}
                       </span>
                     </div>
