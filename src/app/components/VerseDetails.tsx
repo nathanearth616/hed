@@ -96,7 +96,7 @@ export default function VerseDetails({
           )}
           
           {/* Analyze Button */}
-          <button
+        <button
             onClick={() => handleAnalyze(selectedModel)}
             disabled={isLoading || retryTimer !== null}
             className="w-full mt-6 px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 
@@ -113,7 +113,7 @@ export default function VerseDetails({
             ) : (
               'Analyze with AI'
             )}
-          </button>
+        </button>
         </div>
       </div>
 
@@ -244,7 +244,7 @@ export default function VerseDetails({
                   <p className="text-gray-700 dark:text-gray-300 text-sm">
                     {analysis.application.society}
                   </p>
-                </div>
+              </div>
               </div>
             </div>
           )}

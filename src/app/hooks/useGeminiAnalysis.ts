@@ -18,10 +18,7 @@ export function useGeminiAnalysis() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          verse,
-          model
-        }),
+        body: JSON.stringify({ verse, model }),
       });
       
       if (!response.ok) {
@@ -29,8 +26,26 @@ export function useGeminiAnalysis() {
         throw new Error(errorData.error || 'Failed to analyze verse');
       }
       
-      const data = await response.json();
-      setAnalysis(data);
+      const text = await response.text(); // First get the raw text
+      
+      try {
+        // Try to parse the JSON response
+        const data = JSON.parse(text);
+        setAnalysis(data);
+      } catch (parseError) {
+        // If JSON parsing fails, try to extract the JSON portion
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const cleanedJson = jsonMatch[0]
+            .replace(/^[^{]*/, '') // Remove anything before the first {
+            .replace(/[^}]*$/, ''); // Remove anything after the last }
+          
+          const data = JSON.parse(cleanedJson);
+          setAnalysis(data);
+        } else {
+          throw new Error('Failed to parse analysis response');
+        }
+      }
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err instanceof Error ? err.message : 'Failed to analyze verse');

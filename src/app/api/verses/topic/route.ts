@@ -28,11 +28,11 @@ export async function POST(request: NextRequest) {
       Analyze the biblical topic "${topic}" and provide a JSON response with the following structure:
       {
         "verseReferences": [
-          {
-            "reference": "Book Chapter:Verse",
+        {
+          "reference": "Book Chapter:Verse",
             "text": "The actual verse text",
-            "summary": "Brief explanation of what this verse discusses",
-            "relevance": "High/Medium/Low relevance to the topic"
+          "summary": "Brief explanation of what this verse discusses",
+          "relevance": "High/Medium/Low relevance to the topic"
           }
         ],
         "analysis": "Comprehensive analysis of the biblical perspective on this topic, including key principles, different perspectives, and how understanding evolved (500 words max)",
@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
           return NextResponse.json(validJson);
         } catch (extractError) {
           // All attempts failed, return a minimal valid JSON
-          return NextResponse.json({ 
+    return NextResponse.json({
             verseReferences: [],
             analysis: "Analysis not available due to parsing error.",
             mainThemes: ["Theme information not available"]
