@@ -8,19 +8,34 @@ export default function VerseDetails({ verse }: { verse: BibleVerse | null }) {
   if (!verse) return null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <div className="p-8 border rounded-xl bg-white/50 dark:bg-black/20 shadow-sm space-y-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold mb-2">
+    <div className="space-y-6">
+      {/* Verse Card */}
+      <div className="p-6 bg-white dark:bg-[#1a1a1a] rounded-2xl border border-gray-200 dark:border-gray-800">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-medium text-indigo-600 dark:text-indigo-400">
               {verse.book} {verse.chapter}:{verse.verse}
             </h2>
-            <p className="text-xl text-foreground/80">{verse.text}</p>
+            <span className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 
+              text-gray-600 dark:text-gray-400 text-xs font-medium">
+              {verse.testament} Testament
+            </span>
           </div>
+          <p className="text-gray-900 dark:text-gray-100 text-lg">{verse.text}</p>
+          
+          {error && (
+            <div className="p-4 bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 
+              rounded-xl text-red-600 dark:text-red-400 text-sm">
+              {error}
+            </div>
+          )}
+          
           <button
             onClick={() => analyzeVerse(verse)}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl font-medium transition-colors flex items-center gap-2 whitespace-nowrap"
             disabled={isLoading}
+            className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 
+              hover:from-indigo-600 hover:to-purple-700 disabled:opacity-50 
+              text-white font-medium transition-all duration-200 flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
@@ -32,66 +47,60 @@ export default function VerseDetails({ verse }: { verse: BibleVerse | null }) {
             )}
           </button>
         </div>
+      </div>
 
-        {error && (
-          <div className="p-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 flex items-start gap-3">
-            <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p>{error}</p>
+      {/* Analysis Results */}
+      {analysis && (
+        <div className="space-y-6">
+          {/* Themes */}
+          <div className="p-6 bg-white dark:bg-[#1a1a1a] rounded-2xl border border-gray-200 dark:border-gray-800">
+            <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Key Themes</h3>
+            <div className="flex flex-wrap gap-2">
+              {analysis.themes.map((theme, i) => (
+                <span 
+                  key={i}
+                  className="px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 
+                    text-indigo-600 dark:text-indigo-400 text-sm font-medium"
+                >
+                  {theme}
+                </span>
+              ))}
+            </div>
           </div>
-        )}
 
-        {analysis && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            <section className="space-y-4">
-              <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                Key Themes
-              </h3>
-              <ul className="space-y-2">
-                {analysis.themes?.map((theme, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
-                    <span>{theme}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
+          {/* Related Verses */}
+          <div className="p-6 bg-white dark:bg-[#1a1a1a] rounded-2xl border border-gray-200 dark:border-gray-800">
+            <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Related Verses</h3>
+            <div className="space-y-2">
+              {analysis.relatedVerses.map((verse, i) => (
+                <div 
+                  key={i}
+                  className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 
+                    text-gray-600 dark:text-gray-300 text-sm"
+                >
+                  {verse}
+                </div>
+              ))}
+            </div>
+          </div>
 
-            <section className="space-y-4">
-              <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                Related Verses
-              </h3>
-              <ul className="space-y-2">
-                {analysis.relatedVerses?.map((verse, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
-                    <span>{verse}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="md:col-span-2 space-y-4">
-              <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                Theological Significance
-              </h3>
-              <p className="text-foreground/80 leading-relaxed">
+          {/* Significance & Context */}
+          <div className="p-6 bg-white dark:bg-[#1a1a1a] rounded-2xl border border-gray-200 dark:border-gray-800 space-y-6">
+            <div>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Theological Significance</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                 {analysis.significance}
               </p>
-            </section>
-
-            <section className="md:col-span-2 space-y-4">
-              <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                Historical Context
-              </h3>
-              <p className="text-foreground/80 leading-relaxed">
+            </div>
+            <div>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Historical Context</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                 {analysis.context}
               </p>
-            </section>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 } 

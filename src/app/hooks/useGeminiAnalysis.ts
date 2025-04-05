@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { BibleVerse, GeminiAnalysis } from '../types/bible';
+import { BibleVerse } from '../types/bible';
+
+interface GeminiAnalysis {
+  themes: string[];
+  relatedVerses: string[];
+  significance: string;
+  context: string;
+}
 
 export function useGeminiAnalysis() {
   const [analysis, setAnalysis] = useState<GeminiAnalysis | null>(null);
@@ -11,7 +18,7 @@ export function useGeminiAnalysis() {
     setError(null);
     
     try {
-      const response = await fetch('/api/gemini', {
+      const response = await fetch('/api/verses/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,8 +34,8 @@ export function useGeminiAnalysis() {
       const data = await response.json();
       setAnalysis(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred while analyzing the verse');
-      setAnalysis(null);
+      console.error('Analysis error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to analyze verse');
     } finally {
       setIsLoading(false);
     }

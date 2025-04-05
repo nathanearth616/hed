@@ -1,55 +1,57 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(request: NextRequest) {
   try {
-    const { verse } = await request.json();
+    const { searchText } = await request.json();
     
-    if (!verse) {
-      return NextResponse.json({ error: 'Verse is required' }, { status: 400 });
+    if (!searchText) {
+      return NextResponse.json({ error: 'Search text is required' }, { status: 400 });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    
     const prompt = `
-      Analyze the following Bible verse:
-      "${verse.book} ${verse.chapter}:${verse.verse} - ${verse.text}"
+      Analyze this Bible-related search query: "${searchText}"
       
-      Provide the analysis in the following JSON format:
+      Please provide a JSON response with the following structure:
       {
-        "themes": ["theme1", "theme2", "theme3"],
-        "relatedVerses": ["verse1", "verse2", "verse3"],
-        "significance": "theological significance explanation",
-        "context": "historical context explanation"
+        "mainThemes": ["theme1", "theme2"],
+        "verseReferences": [
+          {
+            "reference": "Book Chapter:Verse",
+            "summary": "brief summary of the verse's content",
+            "relevance": "explanation of how this verse relates to the search query"
+          }
+        ],
+        "analysis": "brief analysis of the search query and its biblical significance"
       }
       
-      Only return the JSON object, no other text.
+      Focus on:
+      1. Analyzing the themes and concepts
+      2. Explaining the relevance of verses without quoting them directly
+      3. Providing references that can be looked up
+      
+      Only respond with the JSON object.
     `;
 
     const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const response = await result.response;
+    const text = response.text();
     
-    try {
-      // Extract JSON from the response
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error('Invalid response format');
-      }
-      const analysis = JSON.parse(jsonMatch[0]);
-      return NextResponse.json(analysis);
-    } catch (parseError) {
-      console.error('Error parsing Gemini response:', parseError);
-      return NextResponse.json(
-        { error: 'Failed to parse analysis' },
-        { status: 500 }
-      );
-    }
+    // Clean the response text to ensure it's valid JSON
+    const cleanedText = text.trim().replace(/^```json\s*|\s*```$/g, '');
+    
+    // Parse the JSON response from Gemini
+    const analysis = JSON.parse(cleanedText);
+    
+    return NextResponse.json(analysis);
   } catch (error) {
-    console.error('API error:', error);
+    console.error('Gemini API error:', error);
     return NextResponse.json(
-      { error: 'Failed to analyze verse' },
+      { error: 'Failed to analyze search' },
       { status: 500 }
     );
   }

@@ -33,11 +33,4 @@ export type RelatedVerse = BibleVerse & {
   relationship_type: RelationshipType;
   strength: number;
   description?: string;
-};
-
-export interface GeminiAnalysis {
-  themes: string[];
-  relatedVerses: string[];
-  significance: string;
-  context: string;
-} 
+}; 
