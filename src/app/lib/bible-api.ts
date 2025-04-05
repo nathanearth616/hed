@@ -91,17 +91,28 @@ export function parseVerseReference(referenceString: string): VerseReference | n
 }
 
 export async function getChapterVerses(book: string, chapter: number): Promise<BibleVerse[]> {
-  const { data, error } = await supabase
-    .from('bible_verses')
-    .select('*')
-    .eq('book', book)
-    .eq('chapter', chapter)
-    .order('verse');
-  
-  if (error) {
+  try {
+    const response = await fetch(`/api/verses/${encodeURIComponent(book)}/${chapter}`);
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Failed to fetch verses: ${errorData.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    
+    if (!Array.isArray(data)) {
+      throw new Error('Invalid response format: expected an array of verses');
+    }
+
+    return data.map((verse: any) => ({
+      book,
+      chapter,
+      verse: verse.verse,
+      text: verse.text
+    }));
+  } catch (error) {
     console.error('Error fetching chapter verses:', error);
-    return [];
+    throw new Error(`Failed to load ${book} chapter ${chapter}. Please try again.`);
   }
-  
-  return data || [];
 } 

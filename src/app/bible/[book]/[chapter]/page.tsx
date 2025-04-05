@@ -26,26 +26,36 @@ export default function BibleChapterPage() {
   useEffect(() => {
     const loadVerses = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const chapterVerses = await getChapterVerses(book, chapter);
+        
+        if (!chapterVerses || chapterVerses.length === 0) {
+          throw new Error(`No verses found for ${book} chapter ${chapter}`);
+        }
+        
         setVerses(chapterVerses);
         
-        // If there's a highlighted verse, set it as selected but don't auto-analyze
         if (highlightVerse) {
           const verse = chapterVerses.find(v => v.verse === highlightVerse);
           if (verse) {
             setSelectedVerse(verse);
-            // Remove auto-analysis to prevent rate limit issues
-            // analyzeVerse(verse, 'gemini' as AIModel);
           }
         }
       } catch (err) {
-        setError('Failed to load verses');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load verses';
+        setError(errorMessage);
+        console.error('Error loading verses:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    loadVerses();
+    if (book && chapter) {
+      loadVerses();
+    } else {
+      setError('Invalid book or chapter');
+    }
   }, [book, chapter, highlightVerse]);
 
   useEffect(() => {
@@ -76,9 +86,21 @@ export default function BibleChapterPage() {
 
   if (error) {
     return (
-      <div className="max-w-2xl mx-auto p-4 mt-8 bg-red-50 dark:bg-red-500/10 
-        border border-red-100 dark:border-red-500/20 rounded-xl text-red-600 dark:text-red-400">
-        {error}
+      <div className="max-w-2xl mx-auto p-6">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-100 
+          dark:border-red-500/20 rounded-xl p-6 text-center">
+          <h2 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-2">
+            Error Loading Chapter
+          </h2>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white 
+              rounded-lg transition-colors duration-200"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
