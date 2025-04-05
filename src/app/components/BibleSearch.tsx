@@ -87,8 +87,8 @@ export default function BibleSearch({ selectedModel }: { selectedModel: AIModel 
   };
 
   const handleVerseSelect = (verse: BibleVerse) => {
-    setSelectedVerse(verse);
-    analyzeVerse(verse, selectedModel);
+    // Navigate to the verse page with query parameters
+    window.open(`/bible/${verse.book}/${verse.chapter}?highlight=${verse.verse}`, '_blank');
   };
 
   return (
