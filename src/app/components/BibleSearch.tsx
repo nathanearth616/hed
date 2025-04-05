@@ -39,7 +39,10 @@ export default function BibleSearch() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ topic: searchText }),
+          body: JSON.stringify({ 
+            topic: searchText,
+            model: selectedModel
+          }),
         });
 
         if (!response.ok) {
@@ -54,7 +57,7 @@ export default function BibleSearch() {
         setIsLoading(false);
       }
     }, 1000),
-    []
+    [selectedModel]
   );
 
   const handleSearch = (e: React.FormEvent) => {
