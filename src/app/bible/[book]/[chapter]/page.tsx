@@ -181,34 +181,136 @@ export default function BibleChapterPage() {
 
               {analysis && (
                 <div className="space-y-6">
-                  {/* Analysis sections */}
-                  <section>
-                    <h3 className="font-semibold mb-2">Key Themes</h3>
-                    <ul className="list-disc list-inside">
+                  {/* Original Language Analysis */}
+                  {analysis.originalLanguage && analysis.originalLanguage.length > 0 && (
+                    <section className="bg-white/90 dark:bg-black/90 rounded-xl p-4">
+                      <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">Original Language</h3>
+                      <div className="space-y-3">
+                        {analysis.originalLanguage.map((word, i) => (
+                          <div key={i} className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                {word.text}
+                              </span>
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                ({word.transliteration})
+                              </span>
+                              {word.strongsNumber && (
+                                <span className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                                  Strong's: {word.strongsNumber}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{word.definition}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Key Words Analysis */}
+                  {analysis.keyWords && (
+                    <section className="bg-white/90 dark:bg-black/90 rounded-xl p-4">
+                      <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">Key Words</h3>
+                      <div className="space-y-3">
+                        {analysis.keyWords.map((word, i) => (
+                          <div key={i} className="space-y-1">
+                            <h4 className="font-medium text-gray-800 dark:text-gray-200">{word.word}</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              <span className="font-medium">Meaning:</span> {word.meaning}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              <span className="font-medium">Significance:</span> {word.significance}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Key Themes */}
+                  <section className="bg-white/90 dark:bg-black/90 rounded-xl p-4">
+                    <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">Key Themes</h3>
+                    <ul className="space-y-2">
                       {analysis.themes.map((theme, i) => (
-                        <li key={i}>{theme}</li>
+                        <li key={i} className="flex items-start gap-2">
+                          <span className="text-green-600 dark:text-green-400">•</span>
+                          <span className="text-gray-700 dark:text-gray-300">{theme}</span>
+                        </li>
                       ))}
                     </ul>
                   </section>
 
-                  <section>
-                    <h3 className="font-semibold mb-2">Related Verses</h3>
-                    <ul className="list-disc list-inside">
+                  {/* Related Verses with improved styling */}
+                  <section className="bg-white/90 dark:bg-black/90 rounded-xl p-4">
+                    <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">Related Verses</h3>
+                    <div className="space-y-2">
                       {analysis.relatedVerses.map((verse, i) => (
-                        <li key={i}>{verse}</li>
+                        <div key={i} className="flex items-start gap-2">
+                          <span className="text-green-600 dark:text-green-400 shrink-0">•</span>
+                          <span className="text-gray-700 dark:text-gray-300">{verse}</span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </section>
 
-                  <section>
-                    <h3 className="font-semibold mb-2">Theological Significance</h3>
-                    <p>{analysis.significance}</p>
+                  {/* Interpretation */}
+                  {analysis.interpretation && (
+                    <section className="bg-white/90 dark:bg-black/90 rounded-xl p-4">
+                      <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">Interpretation</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="font-medium text-gray-800 dark:text-gray-200">Literal Meaning</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{analysis.interpretation.literal}</p>
+                        </div>
+                        {analysis.interpretation.allegorical && (
+                          <div>
+                            <h4 className="font-medium text-gray-800 dark:text-gray-200">Allegorical Meaning</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{analysis.interpretation.allegorical}</p>
+                          </div>
+                        )}
+                        {analysis.interpretation.moral && (
+                          <div>
+                            <h4 className="font-medium text-gray-800 dark:text-gray-200">Moral Application</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{analysis.interpretation.moral}</p>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Theological Significance */}
+                  <section className="bg-white/90 dark:bg-black/90 rounded-xl p-4">
+                    <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">Theological Significance</h3>
+                    <p className="text-gray-700 dark:text-gray-300">{analysis.significance}</p>
                   </section>
 
-                  <section>
-                    <h3 className="font-semibold mb-2">Historical Context</h3>
-                    <p>{analysis.context}</p>
+                  {/* Historical and Cultural Context */}
+                  <section className="bg-white/90 dark:bg-black/90 rounded-xl p-4">
+                    <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">Historical Context</h3>
+                    <p className="text-gray-700 dark:text-gray-300">{analysis.context}</p>
+                    {analysis.culturalContext && (
+                      <>
+                        <h3 className="font-semibold mb-3 mt-4 text-gray-900 dark:text-white">Cultural Context</h3>
+                        <p className="text-gray-700 dark:text-gray-300">{analysis.culturalContext}</p>
+                      </>
+                    )}
                   </section>
+
+                  {/* Application Points */}
+                  {analysis.applicationPoints && (
+                    <section className="bg-white/90 dark:bg-black/90 rounded-xl p-4">
+                      <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">Application Points</h3>
+                      <ul className="space-y-2">
+                        {analysis.applicationPoints.map((point, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-green-600 dark:text-green-400">•</span>
+                            <span className="text-gray-700 dark:text-gray-300">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
                 </div>
               )}
             </>

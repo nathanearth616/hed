@@ -29,38 +29,66 @@ export async function POST(request: NextRequest) {
       Provide a comprehensive analysis in the following JSON format:
       {
         "themes": ["theme1", "theme2", "theme3"],
-        "relatedVerses": ["verse1", "verse2", "verse3"],
+        "relatedVerses": ["verse1 with reference", "verse2 with reference"],
         "significance": "theological significance explanation",
         "context": "historical context explanation",
-        "wordStudy": {
-          "keyWords": [
-            {
-              "word": "original word",
-              "translation": "English translation",
-              "meaning": "detailed meaning and usage"
-            }
-          ]
+        "originalLanguage": [
+          {
+            "text": "original Hebrew/Greek word",
+            "transliteration": "transliteration to English alphabet",
+            "definition": "detailed word definition",
+            "strongsNumber": "Strong's Concordance reference number"
+          }
+        ],
+        "culturalContext": "explanation of cultural context and customs",
+        "applicationPoints": [
+          "practical application point 1",
+          "practical application point 2"
+        ],
+        "keyWords": [
+          {
+            "word": "significant word from the verse",
+            "meaning": "detailed meaning in context",
+            "significance": "theological/practical significance"
+          }
+        ],
+        "interpretation": {
+          "literal": "literal interpretation of the verse",
+          "allegorical": "allegorical/symbolic meaning if applicable",
+          "moral": "moral teaching or principle"
         },
         "crossReferences": [
           {
             "reference": "Book Chapter:Verse",
-            "connection": "explanation of how this verse connects to the original verse"
+            "connection": "explanation of how verses connect"
           }
         ],
         "application": {
-          "personal": "how this verse applies to personal life",
-          "community": "how this verse applies to community/church",
-          "society": "how this verse applies to society at large"
+          "personal": "personal life application",
+          "community": "church/community application",
+          "society": "broader societal application"
         },
         "literaryDevices": [
           {
-            "device": "name of literary device",
-            "explanation": "how this device is used in the verse"
+            "device": "literary device used (metaphor, simile, etc.)",
+            "explanation": "how the device is used and its effect"
           }
         ]
       }
-      
-      Return only the JSON object, no additional text.
+
+      Guidelines:
+      1. For original language analysis, include the actual Hebrew/Greek text when relevant
+      2. Provide Strong's numbers when available
+      3. Include 3-5 key themes
+      4. List 3-5 relevant cross-references with explanations
+      5. Ensure all verse references include book, chapter, and verse
+      6. Make application points specific and actionable
+      7. Include cultural and historical context from the time period
+      8. Analyze any significant words or phrases in detail
+      9. Consider both immediate and broader biblical context
+      10. Identify and explain any literary devices or writing styles
+
+      Return only the JSON object, no additional text. Ensure proper JSON formatting.
     `;
 
     let result;

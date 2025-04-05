@@ -3,6 +3,24 @@ export interface GeminiAnalysis {
   relatedVerses: string[];
   significance: string;
   context: string;
+  originalLanguage?: {
+    text: string;
+    transliteration: string;
+    definition: string;
+    strongsNumber?: string;
+  }[];
+  culturalContext: string;
+  applicationPoints: string[];
+  keyWords: {
+    word: string;
+    meaning: string;
+    significance: string;
+  }[];
+  interpretation: {
+    literal: string;
+    allegorical?: string;
+    moral?: string;
+  };
   wordStudy?: {
     keyWords: {
       word: string;
