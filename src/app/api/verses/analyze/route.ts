@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Groq } from 'groq-sdk';
 import { rateLimit } from '@/app/lib/rate-limit';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
+
 const limiter = rateLimit({ interval: 60 * 1000, // 1 minute
                            uniqueTokenPerInterval: 10 });
 
@@ -11,30 +16,54 @@ export async function POST(request: NextRequest) {
     // Apply rate limiting
     await limiter.check();
 
-    const { verse } = await request.json();
+    const { verse, model } = await request.json();
     
     if (!verse) {
       return NextResponse.json({ error: 'Verse is required' }, { status: 400 });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const prompt = `
+      Analyze the following Bible verse:
+      "${verse.book} ${verse.chapter}:${verse.verse} - ${verse.text}"
+      
+      Provide analysis in the following JSON format:
+      {
+        "themes": ["theme1", "theme2", "theme3"],
+        "relatedVerses": ["verse1", "verse2", "verse3"],
+        "significance": "theological significance explanation",
+        "context": "historical context explanation"
+      }
+      
+      Return only the JSON object, no additional text.
+    `;
 
-    const result = await model.generateContent([
-      { text: `Analyze this Bible verse: ${verse.book} ${verse.chapter}:${verse.verse} - ${verse.text}` }
-    ]);
-
-    // If we hit the rate limit, return a cached or fallback response
-    if (!result.response) {
-      return NextResponse.json({
-        themes: ["Theme analysis unavailable"],
-        relatedVerses: [],
-        significance: "Analysis temporarily unavailable due to high traffic. Please try again in a few minutes.",
-        context: "Historical context analysis temporarily unavailable."
+    let result;
+    
+    if (model === 'groq') {
+      const completion = await groq.chat.completions.create({
+        messages: [{ role: 'user', content: prompt }],
+        model: 'mixtral-8x7b-32768',
+        temperature: 0.5,
+        max_tokens: 1024,
       });
+      
+      result = completion.choices[0]?.message?.content;
+    } else {
+      // Default to Gemini
+      const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+      const geminiResult = await geminiModel.generateContent(prompt);
+      result = geminiResult.response.text();
     }
 
-    return NextResponse.json(result.response);
+    // Extract the JSON object from the response
+    const jsonMatch = result.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Invalid analysis format received');
+    }
 
+    const analysis = JSON.parse(jsonMatch[0]);
+
+    return NextResponse.json(analysis);
   } catch (error) {
     console.error('API error:', error);
     
@@ -47,7 +76,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Failed to analyze verse. Please try again later.' },
+      { error: error instanceof Error ? error.message : 'Failed to analyze verse' },
       { status: 500 }
     );
   }

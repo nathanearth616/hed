@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BibleVerse } from '../types/bible';
+import { AIModel } from '../types/ai';
 
 interface GeminiAnalysis {
   themes: string[];
@@ -13,7 +14,7 @@ export function useGeminiAnalysis() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const analyzeVerse = async (verse: BibleVerse) => {
+  const analyzeVerse = async (verse: BibleVerse, model: AIModel = 'gemini') => {
     setIsLoading(true);
     setError(null);
     
@@ -23,7 +24,7 @@ export function useGeminiAnalysis() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ verse }),
+        body: JSON.stringify({ verse, model }),
       });
       
       if (!response.ok) {

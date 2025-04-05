@@ -5,6 +5,7 @@ import LoadingSpinner from './LoadingSpinner';
 import VerseDetails from './VerseDetails';
 import { BibleVerse } from '../types/bible';
 import debounce from 'lodash/debounce';
+import { AIModel, AI_MODELS } from '../types/ai';
 
 interface SearchResult {
   mainThemes: string[];
@@ -19,6 +20,7 @@ interface SearchResult {
 
 export default function BibleSearch() {
   const [searchText, setSearchText] = useState('');
+  const [selectedModel, setSelectedModel] = useState<AIModel>('gemini');
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [selectedVerse, setSelectedVerse] = useState<BibleVerse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -67,18 +69,19 @@ export default function BibleSearch() {
 
   return (
     <div className="space-y-6">
-      {/* Search Input */}
-      <div className="max-w-2xl mx-auto">
+      {/* Search Section */}
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Search Input */}
         <form onSubmit={handleSearch} className="relative">
           <input
             type="text"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="Enter a biblical topic, theme, or verse..."
-            className="w-full px-6 py-4 rounded-2xl bg-white dark:bg-[#1a1a1a] 
-              border border-gray-200 dark:border-gray-800
+            className="w-full px-6 py-4 rounded-2xl bg-white/95 dark:bg-black/70 
+              border border-white/20 backdrop-blur-md
               focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
-              placeholder:text-gray-400 dark:placeholder:text-gray-600
+              placeholder:text-gray-500 dark:placeholder:text-gray-400
               text-lg shadow-sm"
           />
           <button
@@ -99,6 +102,52 @@ export default function BibleSearch() {
             )}
           </button>
         </form>
+
+        {/* AI Model Selector */}
+        <div className="p-4 bg-white/95 dark:bg-black/70 rounded-2xl 
+          border border-white/20 backdrop-blur-md">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">
+              Select AI Model
+            </h3>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Choose an AI model for analysis
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {AI_MODELS.map((model) => (
+              <button
+                key={model.id}
+                onClick={() => setSelectedModel(model.id)}
+                className={`
+                  relative p-4 rounded-xl border-2 transition-all duration-200
+                  flex flex-col items-center gap-3
+                  ${selectedModel === model.id 
+                    ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10' 
+                    : 'border-gray-200 dark:border-gray-800 hover:border-indigo-500/50'
+                  }
+                `}
+              >
+                {selectedModel === model.id && (
+                  <div className="absolute top-2 right-2">
+                    <svg className="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+                <span className="text-4xl">{model.icon}</span>
+                <div className="text-center">
+                  <div className="font-medium text-gray-900 dark:text-gray-100 mb-1">
+                    {model.name}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {model.description}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Error Message */}
@@ -115,9 +164,9 @@ export default function BibleSearch() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column - Search Results */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="font-medium text-gray-900 dark:text-gray-100">Search Results</h2>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex items-center justify-between text-white">
+                <h2 className="font-medium">Search Results</h2>
+                <span className="text-sm text-white/70">
                   {searchResult.verseReferences.length} verses found
                 </span>
               </div>
@@ -126,19 +175,20 @@ export default function BibleSearch() {
                   <div 
                     key={i} 
                     onClick={() => {
-                      const verseObj = {
+                      const verseObj: BibleVerse = {
                         id: 0,
                         book: verse.reference.split(' ')[0],
                         chapter: parseInt(verse.reference.split(' ')[1].split(':')[0]),
                         verse: parseInt(verse.reference.split(':')[1]),
                         text: verse.text,
-                        testament: verse.reference.split(' ')[0].includes('Genesis') ? 'old' : 'new'
+                        testament: verse.reference.split(' ')[0].toLowerCase().includes('genesis') ? 'old' : 'new' as const
                       };
                       handleVerseSelect(verseObj);
                     }}
-                    className="p-6 bg-white dark:bg-[#1a1a1a] rounded-2xl border border-gray-200 dark:border-gray-800 
-                      hover:border-indigo-500/50 dark:hover:border-indigo-500/50 cursor-pointer transition-all duration-200
-                      group"
+                    className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+                      border border-white/20 backdrop-blur-md
+                      hover:bg-white/98 dark:hover:bg-black/80 cursor-pointer 
+                      transition-all duration-200 group"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-medium text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-500">
@@ -160,9 +210,13 @@ export default function BibleSearch() {
             <div className="space-y-6">
               <div className="sticky top-6">
                 {selectedVerse ? (
-                  <VerseDetails verse={selectedVerse} />
+                  <VerseDetails 
+                    verse={selectedVerse} 
+                    selectedModel={selectedModel}
+                  />
                 ) : (
-                  <div className="p-6 bg-white dark:bg-[#1a1a1a] rounded-2xl border border-gray-200 dark:border-gray-800">
+                  <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+                    border border-white/20 backdrop-blur-md">
                     <div className="flex flex-col items-center justify-center text-center space-y-3">
                       <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
                         <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
