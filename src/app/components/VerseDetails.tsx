@@ -1,9 +1,29 @@
 import { BibleVerse } from '../types/bible';
 import { useGeminiAnalysis } from '../hooks/useGeminiAnalysis';
 import LoadingSpinner from './LoadingSpinner';
+import { useState, useEffect } from 'react';
 
 export default function VerseDetails({ verse }: { verse: BibleVerse | null }) {
   const { analysis, isLoading, error, analyzeVerse } = useGeminiAnalysis();
+  const [retryTimer, setRetryTimer] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (retryTimer !== null) {
+      const timer = setTimeout(() => setRetryTimer(null), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [retryTimer]);
+
+  const handleAnalyze = async () => {
+    if (retryTimer !== null) return;
+    try {
+      await analyzeVerse(verse);
+    } catch (err) {
+      if (err instanceof Error && err.message.includes('429')) {
+        setRetryTimer(60);
+      }
+    }
+  };
 
   if (!verse) return null;
 
@@ -27,12 +47,17 @@ export default function VerseDetails({ verse }: { verse: BibleVerse | null }) {
             <div className="p-4 bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 
               rounded-xl text-red-600 dark:text-red-400 text-sm">
               {error}
+              {retryTimer && (
+                <div className="mt-2 text-sm">
+                  Please wait {retryTimer} seconds before trying again
+                </div>
+              )}
             </div>
           )}
           
           <button
-            onClick={() => analyzeVerse(verse)}
-            disabled={isLoading}
+            onClick={handleAnalyze}
+            disabled={isLoading || retryTimer !== null}
             className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 
               hover:from-indigo-600 hover:to-purple-700 disabled:opacity-50 
               text-white font-medium transition-all duration-200 flex items-center justify-center gap-2"
@@ -42,6 +67,8 @@ export default function VerseDetails({ verse }: { verse: BibleVerse | null }) {
                 <LoadingSpinner />
                 <span>Analyzing...</span>
               </>
+            ) : retryTimer ? (
+              `Retry in ${retryTimer}s`
             ) : (
               'Analyze with AI'
             )}
