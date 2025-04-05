@@ -1,13 +1,7 @@
 import { useState } from 'react';
 import { BibleVerse } from '../types/bible';
 import { AIModel } from '../types/ai';
-
-interface GeminiAnalysis {
-  themes: string[];
-  relatedVerses: string[];
-  significance: string;
-  context: string;
-}
+import { GeminiAnalysis } from '../types/analysis';
 
 export function useGeminiAnalysis() {
   const [analysis, setAnalysis] = useState<GeminiAnalysis | null>(null);

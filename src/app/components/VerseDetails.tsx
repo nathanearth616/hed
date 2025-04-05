@@ -137,6 +137,73 @@ export default function VerseDetails({
             </div>
           </div>
 
+          {/* Word Study */}
+          {analysis.wordStudy && analysis.wordStudy.keyWords.length > 0 && (
+            <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+              border border-white/20 backdrop-blur-md">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Word Study</h3>
+              <div className="space-y-4">
+                {analysis.wordStudy.keyWords.map((word: { word: string; translation: string; meaning: string }, i: number) => (
+                  <div key={i} className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      <span className="px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/30 
+                        text-green-800 dark:text-green-300 text-sm font-medium">
+                        {word.word}
+                      </span>
+                      <span className="px-2 py-1 rounded-md bg-blue-100 dark:bg-blue-900/30 
+                        text-blue-800 dark:text-blue-300 text-sm font-medium">
+                        {word.translation}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm">
+                      {word.meaning}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Literary Devices */}
+          {analysis.literaryDevices && analysis.literaryDevices.length > 0 && (
+            <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+              border border-white/20 backdrop-blur-md">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Literary Devices</h3>
+              <div className="space-y-3">
+                {analysis.literaryDevices.map((device: { device: string; explanation: string }, i: number) => (
+                  <div key={i} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                    <div className="font-medium text-gray-800 dark:text-gray-200 mb-1">
+                      {device.device}
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm">
+                      {device.explanation}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Cross References */}
+          {analysis.crossReferences && analysis.crossReferences.length > 0 && (
+            <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+              border border-white/20 backdrop-blur-md">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Cross References</h3>
+              <div className="space-y-3">
+                {analysis.crossReferences.map((ref, i) => (
+                  <div key={i} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                    <div className="font-medium text-green-600 dark:text-green-400 mb-1">
+                      {ref.reference}
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm">
+                      {ref.connection}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Related Verses */}
           <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
             border border-white/20 backdrop-blur-md">
@@ -153,6 +220,34 @@ export default function VerseDetails({
               ))}
             </ul>
           </div>
+
+          {/* Application */}
+          {analysis.application && (
+            <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+              border border-white/20 backdrop-blur-md">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Application</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Personal</h4>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">
+                    {analysis.application.personal}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Community</h4>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">
+                    {analysis.application.community}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Society</h4>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">
+                    {analysis.application.society}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Theological Significance */}
           <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 

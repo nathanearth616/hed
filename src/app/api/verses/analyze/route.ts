@@ -26,12 +26,38 @@ export async function POST(request: NextRequest) {
       Analyze the following Bible verse:
       "${verse.book} ${verse.chapter}:${verse.verse} - ${verse.text}"
       
-      Provide analysis in the following JSON format:
+      Provide a comprehensive analysis in the following JSON format:
       {
         "themes": ["theme1", "theme2", "theme3"],
         "relatedVerses": ["verse1", "verse2", "verse3"],
         "significance": "theological significance explanation",
-        "context": "historical context explanation"
+        "context": "historical context explanation",
+        "wordStudy": {
+          "keyWords": [
+            {
+              "word": "original word",
+              "translation": "English translation",
+              "meaning": "detailed meaning and usage"
+            }
+          ]
+        },
+        "crossReferences": [
+          {
+            "reference": "Book Chapter:Verse",
+            "connection": "explanation of how this verse connects to the original verse"
+          }
+        ],
+        "application": {
+          "personal": "how this verse applies to personal life",
+          "community": "how this verse applies to community/church",
+          "society": "how this verse applies to society at large"
+        },
+        "literaryDevices": [
+          {
+            "device": "name of literary device",
+            "explanation": "how this device is used in the verse"
+          }
+        ]
       }
       
       Return only the JSON object, no additional text.

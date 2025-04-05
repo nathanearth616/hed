@@ -16,6 +16,24 @@ interface SearchResult {
     relevance: string;
   }[];
   analysis: string;
+  theologicalFramework?: {
+    oldTestament: string;
+    newTestament: string;
+    development: string;
+  };
+  contemporaryApplication?: {
+    personal: string;
+    community: string;
+    society: string;
+  };
+  commonMisconceptions?: {
+    misconception: string;
+    correction: string;
+  }[];
+  furtherStudy?: {
+    keyPassages: string[];
+    suggestedTopics: string[];
+  };
 }
 
 export default function BibleSearch() {
@@ -229,6 +247,144 @@ export default function BibleSearch() {
                       <p className="text-gray-500 dark:text-gray-400">
                         Select a verse from the results to view analysis
                       </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Topic Analysis */}
+              <div className="space-y-6">
+                {/* Main Themes */}
+                <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+                  border border-white/20 backdrop-blur-md">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Key Themes</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {searchResult.mainThemes.map((theme, i) => (
+                      <span 
+                        key={i}
+                        className="px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-500/10 
+                          text-green-600 dark:text-green-400 text-sm font-medium"
+                      >
+                        {theme}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Comprehensive Analysis */}
+                <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+                  border border-white/20 backdrop-blur-md">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Comprehensive Analysis</h3>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    {searchResult.analysis}
+                  </p>
+                </div>
+
+                {/* Theological Framework */}
+                {searchResult.theologicalFramework && (
+                  <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+                    border border-white/20 backdrop-blur-md">
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Theological Framework</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Old Testament</h4>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                          {searchResult.theologicalFramework.oldTestament}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Testament</h4>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                          {searchResult.theologicalFramework.newTestament}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Development</h4>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                          {searchResult.theologicalFramework.development}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Contemporary Application */}
+                {searchResult.contemporaryApplication && (
+                  <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+                    border border-white/20 backdrop-blur-md">
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Contemporary Application</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Personal</h4>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                          {searchResult.contemporaryApplication.personal}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Community</h4>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                          {searchResult.contemporaryApplication.community}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Society</h4>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                          {searchResult.contemporaryApplication.society}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Common Misconceptions */}
+                {searchResult.commonMisconceptions && searchResult.commonMisconceptions.length > 0 && (
+                  <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+                    border border-white/20 backdrop-blur-md">
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Common Misconceptions</h3>
+                    <div className="space-y-4">
+                      {searchResult.commonMisconceptions.map((item, i) => (
+                        <div key={i} className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                          <div className="font-medium text-red-600 dark:text-red-400 mb-1">
+                            Misconception: {item.misconception}
+                          </div>
+                          <p className="text-gray-700 dark:text-gray-300 text-sm">
+                            <span className="font-medium">Correction: </span>
+                            {item.correction}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Further Study */}
+                {searchResult.furtherStudy && (
+                  <div className="p-6 bg-white/95 dark:bg-black/70 rounded-2xl 
+                    border border-white/20 backdrop-blur-md">
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Further Study</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Key Passages</h4>
+                        <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 text-sm space-y-1">
+                          {searchResult.furtherStudy.keyPassages.map((passage, i) => (
+                            <li key={i}>{passage}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Suggested Topics</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {searchResult.furtherStudy.suggestedTopics.map((topic, i) => (
+                            <span 
+                              key={i}
+                              className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 
+                                text-blue-600 dark:text-blue-400 text-sm font-medium"
+                            >
+                              {topic}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
