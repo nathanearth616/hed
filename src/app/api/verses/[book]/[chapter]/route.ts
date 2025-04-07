@@ -6,8 +6,10 @@ export async function GET(
   { params }: { params: { book: string; chapter: string } }
 ) {
   try {
-    const book = decodeURIComponent(params.book);
-    const chapter = parseInt(params.chapter);
+    // Await the params to ensure they are resolved
+    const { book: bookParam, chapter: chapterParam } = await Promise.resolve(params);
+    const book = decodeURIComponent(bookParam);
+    const chapter = parseInt(chapterParam);
 
     if (!book || isNaN(chapter)) {
       return NextResponse.json(
