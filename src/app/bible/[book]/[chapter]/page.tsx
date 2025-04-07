@@ -17,6 +17,7 @@ export default function BibleChapterPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedVerse, setSelectedVerse] = useState<BibleVerse | null>(null);
   const { analysis, isLoading: analysisLoading, error: analysisError, analyzeVerse } = useGeminiAnalysis();
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const book = params.book as string;
   const chapter = parseInt(params.chapter as string);
@@ -76,6 +77,10 @@ export default function BibleChapterPage() {
     return AI_MODELS.find(m => m.id === modelId)?.name || 'AI';
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -109,7 +114,7 @@ export default function BibleChapterPage() {
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
       <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-6">
         {/* Left Column - Bible Verses */}
-        <div className="space-y-4 lg:space-y-6 h-[60vh] lg:max-h-[calc(100vh-2rem)] overflow-y-auto">
+        <div className="space-y-4 lg:space-y-6 h-[30vh] lg:h-[calc(100vh-2rem)] overflow-y-auto">
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white sticky top-0 
             py-3 lg:py-4 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
             {book} {chapter}
@@ -135,16 +140,32 @@ export default function BibleChapterPage() {
           </div>
         </div>
 
-        {/* Right Column - Verse Analysis */}
+        {/* Right Column - Verse Analysis - now stretches to top on mobile */}
         <div className="lg:sticky lg:top-6 lg:self-start space-y-4 lg:space-y-6 
-          h-[calc(40vh-2rem)] lg:h-[calc(100vh-4rem)] overflow-y-auto">
+          h-[calc(100vh-2rem)] overflow-y-auto">
           {selectedVerse && (
             <>
               <div className="sticky top-0 py-3 lg:py-4 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                  <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">
-                    Verse Analysis
-                  </h2>
+                  <div className="flex items-center justify-between w-full sm:w-auto">
+                    <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">
+                      Verse Analysis
+                    </h2>
+                    <button
+                      onClick={toggleFullscreen}
+                      className="lg:hidden ml-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      {isFullscreen ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                   <button
                     onClick={() => analyzeVerse(selectedVerse, selectedModel)}
                     className={`w-full sm:w-auto px-3 py-2 rounded-lg text-sm lg:text-base transition-colors duration-200 
