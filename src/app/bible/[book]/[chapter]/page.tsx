@@ -151,20 +151,6 @@ export default function BibleChapterPage() {
                     <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">
                       Verse Analysis
                     </h2>
-                    <button
-                      onClick={toggleFullscreen}
-                      className="lg:hidden ml-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-                    >
-                      {isFullscreen ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-                        </svg>
-                      )}
-                    </button>
                   </div>
                   <button
                     onClick={() => analyzeVerse(selectedVerse, selectedModel)}
