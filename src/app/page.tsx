@@ -32,13 +32,13 @@ export default function Home() {
         />
       </div>
 
-      {/* Content - make it relative and add padding for footer */}
-      <div className="flex-1 relative z-10 pb-[300px]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <header className="mb-12">
-            <div className="flex items-center justify-between">
+      {/* Content - adjust the padding bottom */}
+      <div className="flex-1 relative z-10 pb-[400px] sm:pb-[300px]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+          <header className="mb-8 sm:mb-12">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
               {/* AI Model Selector */}
-              <div className="relative">
+              <div className="relative order-2 sm:order-1">
                 <button
                   className="flex items-center gap-2 px-3 py-2 rounded-lg 
                     bg-white/10 border border-white/20 
@@ -76,18 +76,20 @@ export default function Home() {
               </div>
 
               {/* Title - centered */}
-              <h1 className="text-6xl font-bold text-white absolute left-1/2 -translate-x-1/2">הדhed</h1>
+              <h1 className="text-4xl sm:text-6xl font-bold text-white order-1 sm:order-2">הדhed</h1>
               
               {/* Empty div for flex spacing */}
-              <div className="w-[144px]"></div>
+              <div className="w-[144px] hidden sm:block order-3"></div>
             </div>
             
-            <p className="text-xl text-white/90 max-w-2xl mx-auto text-center mt-4">
+            <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto text-center mt-4">
               Explore Biblical connections and insights through AI-powered visualization
             </p>
           </header>
           
-          <BibleSearch selectedModel={selectedModel} />
+          <div className="mt-8 sm:mt-12">
+            <BibleSearch selectedModel={selectedModel} />
+          </div>
         </div>
       </div>
 

@@ -106,21 +106,21 @@ export default function BibleChapterPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="max-w-7xl mx-auto p-4 sm:p-6">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-6">
         {/* Left Column - Bible Verses */}
-        <div className="space-y-6 max-h-[calc(100vh-2rem)] overflow-y-auto">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white sticky top-0 
-            py-4 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
+        <div className="space-y-4 lg:space-y-6 h-[60vh] lg:max-h-[calc(100vh-2rem)] overflow-y-auto">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white sticky top-0 
+            py-3 lg:py-4 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
             {book} {chapter}
           </h1>
-          <div className="space-y-4">
+          <div className="space-y-3 lg:space-y-4">
             {verses.map((verse) => (
               <div
                 key={verse.verse}
                 id={`verse-${verse.verse}`}
                 onClick={() => handleVerseClick(verse)}
-                className={`p-4 rounded-lg transition-colors duration-500 cursor-pointer
+                className={`p-3 lg:p-4 rounded-lg transition-colors duration-500 cursor-pointer text-sm lg:text-base
                   ${verse.verse === highlightVerse
                     ? 'bg-green-100 dark:bg-green-900/20'
                     : 'bg-white/95 dark:bg-black/70 hover:bg-white/98 dark:hover:bg-black/80'
@@ -136,19 +136,19 @@ export default function BibleChapterPage() {
         </div>
 
         {/* Right Column - Verse Analysis */}
-        <div className="lg:sticky lg:top-6 lg:self-start space-y-6 
-          max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <div className="lg:sticky lg:top-6 lg:self-start space-y-4 lg:space-y-6 
+          h-[calc(40vh-2rem)] lg:h-[calc(100vh-4rem)] overflow-y-auto">
           {selectedVerse && (
             <>
-              <div className="sticky top-0 py-4 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <div className="sticky top-0 py-3 lg:py-4 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">
                     Verse Analysis
                   </h2>
                   <button
                     onClick={() => analyzeVerse(selectedVerse, selectedModel)}
-                    className={`px-4 py-2 rounded-lg transition-colors duration-200 
-                      flex items-center gap-2 ${
+                    className={`w-full sm:w-auto px-3 py-2 rounded-lg text-sm lg:text-base transition-colors duration-200 
+                      flex items-center justify-center gap-2 ${
                       analysisLoading || error?.includes('Rate limit')
                         ? 'bg-gray-400 cursor-not-allowed'
                         : 'bg-green-500 hover:bg-green-600 text-white'
@@ -157,8 +157,8 @@ export default function BibleChapterPage() {
                   >
                     {analysisLoading ? (
                       <>
-                        <LoadingSpinner />
-                        <span>Analyzing with {getModelName(selectedModel)}...</span>
+                        <LoadingSpinner className="w-4 h-4 lg:w-5 lg:h-5" />
+                        <span className="truncate">Analyzing...</span>
                       </>
                     ) : error?.includes('Rate limit') ? (
                       'Please wait...'
