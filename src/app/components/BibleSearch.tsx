@@ -87,7 +87,7 @@ export default function BibleSearch({ selectedModel }: { selectedModel: AIModel 
   };
 
   const handleVerseSelect = (verse: BibleVerse) => {
-    // Include the selected model in the URL
+    // This only opens a new page, but doesn't trigger any analysis
     window.open(`/bible/${verse.book}/${verse.chapter}?highlight=${verse.verse}&model=${selectedModel}`, '_blank');
   };
 

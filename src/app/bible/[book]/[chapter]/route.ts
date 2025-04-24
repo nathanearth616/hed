@@ -5,29 +5,26 @@ export async function GET(
   { params }: { params: { book: string; chapter: string } }
 ) {
   try {
-    // Await the params before using them
-    const { book, chapter } = params;
-    const decodedBook = decodeURIComponent(book);
-    const chapterNum = parseInt(chapter);
+    const decodedBook = decodeURIComponent(params.book);
+    const chapterNum = parseInt(params.chapter);
 
-    if (!decodedBook || isNaN(chapterNum)) {
+    // ISSUE 2: Missing error handling for invalid chapter number
+    if (isNaN(chapterNum)) {
       return NextResponse.json(
-        { error: 'Invalid book or chapter' },
+        { error: 'Invalid chapter number' },
         { status: 400 }
       );
     }
-    // Construct the API URL
+
     const apiUrl = `https://bible-api.com/${decodedBook} ${chapterNum}`;
-    
-    // Fetch the verses
     const response = await fetch(apiUrl);
     const data = await response.json();
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching verses:', error);
+    console.error('Error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch verses' },
+      { error: 'An error occurred while processing the request' },
       { status: 500 }
     );
   }

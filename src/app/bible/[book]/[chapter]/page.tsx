@@ -60,13 +60,19 @@ export default function BibleChapterPage() {
   }, [book, chapter, highlightVerse]);
 
   useEffect(() => {
-    if (highlightVerse && !loading) {
+    if (highlightVerse && !loading && verses.length > 0) {
+      const verse = verses.find(v => v.verse === highlightVerse);
+      if (verse) {
+        setSelectedVerse(verse);
+        analyzeVerse(verse, selectedModel);
+      }
+      
       const verseElement = document.getElementById(`verse-${highlightVerse}`);
       if (verseElement) {
         verseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
-  }, [highlightVerse, loading]);
+  }, [highlightVerse, loading, verses, analyzeVerse, selectedModel]);
 
   const handleVerseClick = (verse: BibleVerse) => {
     setSelectedVerse(verse);
